@@ -4,10 +4,12 @@
 module.exports = {
   // 构建配置
   build: {
-    command: 'npm run build',
-    directory: '.next',
+    command: 'npm run edgeone:build',
+    directory: 'out', // EdgeOne Pages 期望的输出目录
     environment: {
-      NODE_VERSION: '18'
+      NODE_VERSION: '18',
+      NODE_ENV: 'production',
+      EDGEONE_BUILD: 'true'
     }
   },
   

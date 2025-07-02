@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "edgeone:check": "node scripts/pre-deploy-check.js",
+    "edgeone:build": "cross-env EDGEONE_BUILD=true node scripts/build-edgeone.js",
     "edgeone:deploy": "npm run edgeone:check && echo '✅ 预检查通过，请前往腾讯云控制台完成部署'"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^7.0.3",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

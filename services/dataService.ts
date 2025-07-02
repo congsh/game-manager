@@ -1,4 +1,5 @@
 import { User, Game, GameSignup, GamePlan, GameGroup } from '@/types';
+import { API_CONFIG } from '@/config/api';
 
 export interface AppData {
   users: User[];
@@ -10,7 +11,11 @@ export interface AppData {
 }
 
 class DataService {
-  private baseUrl = '/api';
+  private get baseUrl() {
+    // 动态获取 API 基础地址
+    const apiBase = API_CONFIG.getApiBaseUrl();
+    return `${apiBase}/api`;
+  }
 
   // 获取所有数据
   async getAllData(): Promise<AppData> {

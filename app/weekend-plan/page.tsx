@@ -359,6 +359,8 @@ export default function WeekendPlanPage() {
                   value={formData.targetGameId}
                   onChange={(e) => setFormData({ ...formData, targetGameId: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  title="选择目标游戏"
+                  aria-label="选择目标游戏"
                 >
                   <option value="">请选择游戏</option>
                   {games.map((game) => (
