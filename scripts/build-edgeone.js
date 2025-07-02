@@ -17,7 +17,7 @@ const isEdgeOneBuild = process.env.EDGEONE_BUILD === 'true';
 if (isEdgeOneBuild) {
   console.log('📦 检测到 EdgeOne Pages 环境，使用静态导出模式...');
   
-  // 创建临时的 next.config.js 用于静态导出
+  // 创建临时的 next.config.js 用于静态导出，忽略 API 路由
   const staticConfig = `
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -27,8 +27,12 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
+  // 忽略 API 路由目录
+  generateBuildId: () => 'edgeone-static-build',
+  // 页面扩展名配置，排除 API 路由
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
   experimental: {
-    missingSuspenseWithCSRBailout: false
+    outputFileTracingRoot: process.cwd(),
   }
 };
 
@@ -47,12 +51,33 @@ module.exports = nextConfig;
   fs.writeFileSync(path.join(process.cwd(), 'next.config.js'), staticConfig);
   
   try {
-    // 设置环境变量禁用API路由
-    process.env.NEXT_DISABLE_API_ROUTES = 'true';
+    // 执行构建前清理缓存
+    console.log('🧹 清理构建缓存...');
+    const nextDir = path.join(process.cwd(), '.next');
+    if (fs.existsSync(nextDir)) {
+      fs.rmSync(nextDir, { recursive: true, force: true });
+    }
+    
+    // 临时重命名 API 目录以避免静态导出问题
+    const apiPath = path.join(process.cwd(), 'app', 'api');
+    const apiDisabledPath = path.join(process.cwd(), 'app', '_api_disabled_for_static_build');
+    let apiMoved = false;
+    
+    if (fs.existsSync(apiPath)) {
+      console.log('📁 临时禁用 API 路由用于静态构建...');
+      fs.renameSync(apiPath, apiDisabledPath);
+      apiMoved = true;
+    }
     
     // 执行构建
     console.log('⚙️  执行静态构建...');
     execSync('npx next build', { stdio: 'inherit' });
+    
+    // 恢复 API 目录
+    if (apiMoved && fs.existsSync(apiDisabledPath)) {
+      console.log('🔄 恢复 API 路由...');
+      fs.renameSync(apiDisabledPath, apiPath);
+    }
     
     // 检查输出目录
     const outDir = path.join(process.cwd(), 'out');
@@ -88,8 +113,20 @@ const API_BASE_URL = process.env.NODE_ENV === 'production'
     console.error('❌ 构建失败:', error.message);
     process.exit(1);
   } finally {
+    // 确保恢复 API 目录（如果构建失败）
+    const apiPath = path.join(process.cwd(), 'app', 'api');
+    const apiDisabledPath = path.join(process.cwd(), 'app', '_api_disabled_for_static_build');
+    
+    if (fs.existsSync(apiDisabledPath) && !fs.existsSync(apiPath)) {
+      console.log('🔄 恢复 API 路由...');
+      fs.renameSync(apiDisabledPath, apiPath);
+    }
+    
     // 恢复原配置
-    fs.unlinkSync(path.join(process.cwd(), 'next.config.js'));
+    const nextConfigPath = path.join(process.cwd(), 'next.config.js');
+    if (fs.existsSync(nextConfigPath)) {
+      fs.unlinkSync(nextConfigPath);
+    }
     if (fs.existsSync(backupConfig)) {
       fs.copyFileSync(backupConfig, originalConfig);
       fs.unlinkSync(backupConfig);

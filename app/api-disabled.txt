@@ -1,0 +1,6 @@
+API routes are disabled in static export mode.
+For full functionality, please use the hybrid deployment approach:
+- Frontend: EdgeOne Pages (static)
+- API: Vercel (dynamic)
+
+See HYBRID-DEPLOYMENT.md for details. 
