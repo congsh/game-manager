@@ -1,0 +1,46 @@
+# 腾讯云Serverless配置文件
+# 用于命令行部署腾讯云函数
+
+service: game-manager-api
+
+provider:
+  name: tencent
+  region: ap-guangzhou
+  runtime: Nodejs18.15
+  credentials: ~/.tencent/credentials
+
+functions:
+  gameManagerApi:
+    name: game-manager-api
+    description: 游戏管理系统API - 腾讯云函数版本
+    handler: index.main
+    memorySize: 128
+    timeout: 60
+    environment:
+      NODE_ENV: production
+    events:
+      - apigw:
+          name: game-manager-api-gateway
+          parameters:
+            stageName: release
+            serviceId: # 留空将自动创建
+            httpMethod: ANY
+            integratedResponse: true
+            path: /
+            enableCORS: true
+    layers: []
+
+plugins:
+  - serverless-tencent-scf
+
+package:
+  exclude:
+    - node_modules/**
+    - .git/**
+    - .env*
+    - .vscode/**
+    - temp-*/**
+    - scripts/**
+    - docs/**
+  include:
+    - dist/tencent-scf.zip 

@@ -50,19 +50,30 @@ npm run huawei:build
    ```
 4. 上传代码包：选择 `dist/huawei-function.zip`
 
-### 步骤 4: 配置触发器
+### 步骤 4: 配置API网关触发器
 1. 在函数详情页，点击 **触发器** 标签
-2. 创建 **HTTP触发器**：
+2. 创建 **API网关触发器**：
    ```
-   触发器类型: HTTP触发器
-   协议: HTTPS
-   方法: ANY
-   路径: /
-   鉴权: 无
+   触发器类型: API网关服务 (APIG)
+   API名称: API_game_manager_api
+   分组: 选择或创建新分组
+   发布环境: RELEASE
+   安全认证: App (或根据需要选择)
+   请求协议: HTTPS
+   请求方法: GET (创建后可添加其他方法)
+   后端超时: 5000ms
    ```
-3. 创建后获取访问URL，格式如：
+
+3. **重要：配置多个HTTP方法**
+   - 创建完成后，需要为API添加多个方法支持
+   - 在API网关控制台中，为同一个API路径添加：
+     - GET 方法
+     - POST 方法  
+     - OPTIONS 方法 (用于CORS预检)
+
+4. 获取API访问URL，格式如：
    ```
-   https://xxxxx.functiongraph.cn-north-4.huaweicloud.com
+   https://xxxxxxxx.apig.cn-north-4.huaweicloudapis.com/api
    ```
 
 ### 步骤 5: 更新前端配置

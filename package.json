@@ -13,7 +13,11 @@
 
     "huawei:build": "node scripts/build-huawei.js",
     "huawei:deploy": "hcloud ros create-stack --template-body file://template.yaml --stack-name game-manager-stack",
-    "huawei:dev": "hcloud functiongraph invoke-function --function-name game-manager-api"
+    "huawei:dev": "hcloud functiongraph invoke-function --function-name game-manager-api",
+    "tencent:build": "node scripts/build-tencent.js",
+    "tencent:deploy": "scf deploy --template-file serverless.yml",
+    "tencent:logs": "scf logs --function game-manager-api",
+    "tencent:dev": "scf local start-api"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
