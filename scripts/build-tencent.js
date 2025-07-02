@@ -31,7 +31,10 @@ function initData() {
       users: [],
       games: [],
       reports: {},
-      weekendPlans: []
+      weekendPlans: [],
+      dailySignups: [],
+      gameGroups: [],
+      lastUpdated: new Date().toISOString()
     };
     fs.writeFileSync(dataPath, JSON.stringify(defaultData, null, 2));
     console.log('📝 初始化数据文件');
@@ -64,8 +67,9 @@ function createResponse(statusCode, body) {
       'Content-Type': 'application/json',
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Access-Control-Max-Age': '86400'
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+      'Access-Control-Max-Age': '86400',
+      'Cache-Control': 'no-cache'
     },
     body: JSON.stringify(body)
   };
@@ -84,7 +88,7 @@ exports.main = async (event, context) => {
     
     // 处理OPTIONS预检请求
     if (httpMethod === 'OPTIONS') {
-      return createResponse(200, { message: 'CORS preflight' });
+      return createResponse(200, { message: 'CORS preflight OK' });
     }
     
     let result;
@@ -95,14 +99,29 @@ exports.main = async (event, context) => {
       
       if (httpMethod === 'GET') {
         console.log('📊 获取所有数据');
-        result = data;
+        result = {
+          users: data.users || [],
+          games: data.games || [],
+          dailySignups: data.dailySignups || [],
+          weekendPlans: data.weekendPlans || [],
+          gameGroups: data.gameGroups || [],
+          lastUpdated: data.lastUpdated || new Date().toISOString()
+        };
       } else if (httpMethod === 'POST') {
         const newData = JSON.parse(body || '{}');
         console.log('✏️ 更新数据:', Object.keys(newData));
         
-        // 合并数据
-        Object.assign(data, newData);
-        writeData(data);
+        // 合并数据，保持结构
+        const updatedData = {
+          users: newData.users || data.users || [],
+          games: newData.games || data.games || [],
+          dailySignups: newData.dailySignups || data.dailySignups || [],
+          weekendPlans: newData.weekendPlans || data.weekendPlans || [],
+          gameGroups: newData.gameGroups || data.gameGroups || [],
+          lastUpdated: newData.lastUpdated || new Date().toISOString()
+        };
+        
+        writeData(updatedData);
         result = { success: true, message: '数据更新成功' };
       } else {
         return createResponse(405, { error: '不支持的HTTP方法', method: httpMethod });
@@ -136,6 +155,7 @@ exports.main = async (event, context) => {
           result = { success: true, message: '用户数据更新成功' };
         } else {
           console.log('➕ 创建新用户');
+          data.users = data.users || [];
           data.users.push(userData);
           writeData(data);
           result = { success: true, message: '用户创建成功' };
@@ -143,7 +163,55 @@ exports.main = async (event, context) => {
       } else {
         return createResponse(405, { error: '不支持的HTTP方法', method: httpMethod });
       }
-    } 
+    }
+    else if (reqPath.startsWith('/api/signups') || reqPath.startsWith('/release/api/signups')) {
+      const data = readData();
+      
+      if (httpMethod === 'POST') {
+        const signupData = JSON.parse(body || '{}');
+        console.log('📝 添加游戏报名');
+        data.dailySignups = data.dailySignups || [];
+        data.dailySignups.push({
+          ...signupData,
+          id: Date.now().toString(),
+          timestamp: new Date().toISOString()
+        });
+        writeData(data);
+        result = { success: true, message: '报名成功' };
+      } else {
+        return createResponse(405, { error: '不支持的HTTP方法', method: httpMethod });
+      }
+    }
+    else if (reqPath.startsWith('/api/plans') || reqPath.startsWith('/release/api/plans')) {
+      const data = readData();
+      
+      if (httpMethod === 'POST') {
+        const planData = JSON.parse(body || '{}');
+        console.log('📅 添加周末计划');
+        data.weekendPlans = data.weekendPlans || [];
+        data.weekendPlans.push({
+          ...planData,
+          id: Date.now().toString(),
+          timestamp: new Date().toISOString()
+        });
+        writeData(data);
+        result = { success: true, message: '计划添加成功' };
+      } else {
+        return createResponse(405, { error: '不支持的HTTP方法', method: httpMethod });
+      }
+    }
+    else if (reqPath.includes('/groups/') && reqPath.endsWith('/join')) {
+      const data = readData();
+      
+      if (httpMethod === 'POST') {
+        const joinData = JSON.parse(body || '{}');
+        console.log('👥 加入游戏小组');
+        // 这里可以添加加入小组的逻辑
+        result = { success: true, message: '加入小组成功' };
+      } else {
+        return createResponse(405, { error: '不支持的HTTP方法', method: httpMethod });
+      }
+    }
     else {
       console.log('❓ 未知路径: ' + reqPath);
       return createResponse(404, { error: '路径不存在', path: reqPath });
