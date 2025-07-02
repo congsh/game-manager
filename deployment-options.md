@@ -1,132 +1,162 @@
-# 游戏组队管理系统 - 部署方案对比
+# 游戏组队管理系统 - 部署方案
 
-## 国内环境部署建议
+## 免费国内方案 ⭐ 推荐
 
-### 🌟 推荐方案：国内云服务商
+### 1. 腾讯云 EdgeOne Pages (首推)
+**完全免费，公测期间无限制**
 
-#### 1. **腾讯云 EdgeOne Pages** 
+优势：
+- ✅ 支持 Next.js 全栈部署
+- ✅ 支持 Edge Functions（API）
+- ✅ 无需绑定信用卡
+- ✅ 无并发构建限制
+- ✅ 自动 HTTPS 和 CDN
+- ✅ GitHub 自动部署
+- ✅ 国内访问速度优秀
+
+部署步骤：
+1. 访问 [EdgeOne Pages](https://edgeone.ai/products/pages)
+2. 使用微信/GitHub 登录
+3. 连接 GitHub 仓库
+4. 选择 Next.js 模板
+5. 自动构建部署
+
+配置示例：
 ```yaml
-优势:
-  - 国内访问速度快
-  - 免费额度充足
-  - 支持自动部署
-  - 良好的 CDN 支持
-
-部署步骤:
-  1. 注册腾讯云账号
-  2. 开通 EdgeOne Pages
-  3. 连接 GitHub 仓库
-  4. 配置自动部署
-```
-
-#### 2. **阿里云 Cloud Shell + OSS**
-```yaml
-优势:
-  - 完全国内化
-  - 价格便宜
-  - 稳定可靠
-
-配置:
-  - 静态资源: OSS 存储
-  - API 服务: ECS 或函数计算
-  - CDN: 阿里云 CDN
-```
-
-#### 3. **华为云 + 码云 Pages**
-```yaml
-优势:
-  - 对 GitHub 访问问题免疫
-  - 国内开发者友好
-  - 集成度高
-```
-
-### 🔄 数据存储方案升级
-
-#### 当前问题
-- JSON 文件存储依赖 Vercel 网络
-- 国内访问可能不稳定
-- 没有真正的数据库功能
-
-#### 解决方案
-
-**1. 国内数据库 + API**
-```javascript
-// 数据库选择
-const databaseOptions = {
-  "阿里云RDS": {
-    pros: ["稳定", "便宜", "国内访问快"],
-    cons: ["需要备案"]
+# edgeone.config.js
+module.exports = {
+  build: {
+    command: 'npm run build',
+    output: '.next'
   },
-  "腾讯云MySQL": {
-    pros: ["免费额度", "易用"],
-    cons: ["功能限制"]
-  },
-  "PlanetScale": {
-    pros: ["全球分布", "无服务器"],
-    cons: ["已屏蔽中国IP"]
+  functions: {
+    'api/**': {
+      runtime: 'nodejs18'
+    }
   }
 }
 ```
 
-**2. 混合存储架构**
-```yaml
-国内部署:
-  前端: 腾讯云 EdgeOne Pages
-  API: 腾讯云函数计算
-  数据库: 腾讯云 MySQL
-  CDN: 腾讯云 CDN
+### 2. 腾讯云开发 CloudBase
+**有免费额度，适合全栈应用**
 
-海外部署:
-  前端: Vercel
-  API: Vercel Functions  
-  数据库: Neon/Supabase
-  CDN: Vercel Edge Network
+免费额度：
+- 存储：5GB
+- 云函数：10万次/月
+- 数据库：1GB
 
-数据同步:
-  - 定时同步主要数据
-  - 分地区存储用户数据
+部署方式：
+```bash
+# 安装 CloudBase CLI
+npm install -g @cloudbase/cli
+
+# 登录
+cloudbase login
+
+# 部署
+cloudbase deploy
 ```
 
-## 🛠️ 实施建议
+### 3. 阿里云函数计算
+**有免费额度：100万次调用/月**
 
-### 短期方案（1-2天实施）
-1. **优化现有 Vercel 部署**
-   - 配置亚洲区域
-   - 使用优选 IP
-   - 添加国内 CDN
+部署配置：
+```yaml
+# serverless.yml
+edition: 1.0.0
+name: game-manager
+access: default
 
-### 中期方案（1周实施）  
-1. **腾讯云 EdgeOne 部署**
-   - 迁移前端到腾讯云
-   - 保持 API 在 Vercel
-   - 跨域配置
+services:
+  game-manager:
+    component: fc
+    props:
+      region: cn-hangzhou
+      service:
+        name: game-manager
+        description: 游戏组队管理系统
+      function:
+        name: index
+        description: Next.js 应用
+        codeUri: ./
+        handler: index.handler
+        runtime: nodejs16
+        memorySize: 512
+        timeout: 30
+```
 
-### 长期方案（2-4周实施）
-1. **完全国内化部署**
-   - 数据库迁移到国内
-   - API 服务国内化
-   - 多地域数据同步
+## 国外免费方案
 
-## 💰 成本对比
+### Vercel (国外访问)
+```bash
+# 部署到 Vercel
+npm install -g vercel
+vercel --prod
+```
 
-| 方案 | 月费用 | 性能 | 稳定性 | 国内访问 |
-|------|--------|------|--------|----------|
-| Vercel 优化 | ¥0 | ⭐⭐⭐ | ⭐⭐ | ⭐⭐ |
-| 腾讯云 EdgeOne | ¥0-50 | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
-| 阿里云全套 | ¥30-100 | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+### Cloudflare Pages (国外访问)
+```bash
+# 使用 Wrangler CLI
+npm install -g wrangler
+wrangler pages project create game-manager
+wrangler pages publish dist
+```
 
-## 🎯 最终推荐
+### Netlify (国外访问)
+```bash
+# 使用 Netlify CLI
+npm install -g netlify-cli
+netlify deploy --prod --dir=dist
+```
 
-**为你的20-30人群组推荐**：
+## ⚠️ 避免的收费方案
 
-1. **立即实施**：腾讯云 EdgeOne Pages 部署
-   - 保持现有代码不变
-   - 只需配置新的部署环境
-   - 国内用户访问体验立即提升
+- ~~21YunBox~~ - 不再免费
+- ~~Railway~~ - 限制较多
+- ~~Render~~ - 免费版本限制严格
 
-2. **逐步优化**：数据库迁移
-   - 从 JSON 文件升级到云数据库
-   - 支持真正的多用户并发
-   - 数据安全性更高
+## 💡 推荐部署策略
 
-你想先尝试哪种方案？我可以提供具体的实施步骤！ 
+### 方案A：单一平台 (推荐)
+**EdgeOne Pages** - 前端 + API 一体化部署
+
+### 方案B：混合部署
+- 前端：EdgeOne Pages
+- API：腾讯云开发 CloudBase
+- 数据：本地 JSON + 定期备份
+
+### 方案C：完全本地化
+- 静态页面：EdgeOne Pages
+- 数据存储：浏览器 localStorage
+- 数据备份：GitHub Issues/Gist
+
+## 🔧 部署检查清单
+
+- [ ] 环境变量配置
+- [ ] 构建命令正确
+- [ ] API 路由测试
+- [ ] 自定义域名 (可选)
+- [ ] SSL 证书自动配置
+- [ ] CDN 缓存设置
+- [ ] 监控和日志配置
+
+## 📊 方案对比
+
+| 平台 | 费用 | Next.js支持 | API支持 | 国内访问 | 推荐度 |
+|------|------|-------------|---------|----------|---------|
+| EdgeOne Pages | 免费 | ✅ | ✅ | 优秀 | ⭐⭐⭐⭐⭐ |
+| CloudBase | 免费额度 | ✅ | ✅ | 优秀 | ⭐⭐⭐⭐ |
+| 阿里云FC | 免费额度 | ✅ | ✅ | 优秀 | ⭐⭐⭐⭐ |
+| Vercel | 免费额度 | ✅ | ✅ | 较差 | ⭐⭐⭐ |
+
+## 🎯 最终建议
+
+基于你的需求（20-30人群组，约10人填写），推荐使用 **EdgeOne Pages**：
+
+1. 完全免费，无隐藏费用
+2. 国内访问速度快
+3. 支持全栈 Next.js 应用
+4. 部署过程简单
+5. 自动 HTTPS 和 CDN
+
+如果需要更复杂的后端功能，可以考虑 EdgeOne + CloudBase 的组合方案。 

@@ -26,8 +26,31 @@ class DataService {
       }
       return await response.json();
     } catch (error) {
-      console.error('Error fetching data:', error);
-      return this.getDefaultData();
+      console.error('API 服务不可用，使用本地存储模式:', error);
+      // 降级到 localStorage 模式
+      return this.getDataFromLocalStorage();
+    }
+  }
+
+  // 从 localStorage 获取数据（降级方案）
+  private getDataFromLocalStorage(): AppData {
+    try {
+      const stored = localStorage.getItem('game-manager-data');
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (error) {
+      console.error('localStorage 读取失败:', error);
+    }
+    return this.getDefaultData();
+  }
+
+  // 保存到 localStorage（降级方案）
+  private saveDataToLocalStorage(data: AppData): void {
+    try {
+      localStorage.setItem('game-manager-data', JSON.stringify(data));
+    } catch (error) {
+      console.error('localStorage 保存失败:', error);
     }
   }
 
