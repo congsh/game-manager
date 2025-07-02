@@ -7,17 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "edgeone:check": "node scripts/pre-deploy-check.js",
-    "edgeone:build": "cross-env EDGEONE_BUILD=true node scripts/build-edgeone.js",
-    "edgeone:deploy": "npm run edgeone:check && echo '✅ 预检查通过，请前往腾讯云控制台完成部署'",
-
-    "huawei:build": "node scripts/build-huawei.js",
-    "huawei:deploy": "hcloud ros create-stack --template-body file://template.yaml --stack-name game-manager-stack",
-    "huawei:dev": "hcloud functiongraph invoke-function --function-name game-manager-api",
-    "tencent:build": "node scripts/build-tencent.js",
-    "tencent:deploy": "scf deploy --template-file serverless.yml",
-    "tencent:logs": "scf logs --function game-manager-api",
-    "tencent:dev": "scf local start-api"
+    "setup": "node edgeone-setup.js",
+    "test:api": "node test-local-api.js"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
@@ -33,9 +24,6 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "archiver": "^5.3.1",
-    "cross-env": "^7.0.3",
-    "fs-extra": "^11.2.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 游戏管理系统
 
-## Getting Started
+基于 Next.js + EdgeOne Pages Functions 构建的轻量级游戏管理系统。
 
-First, run the development server:
+## ✨ 特性
 
+- 🎮 **游戏管理**：游戏信息录入和管理
+- 👥 **用户管理**：成员信息管理
+- 📅 **活动规划**：日常报名和周末计划
+- 📊 **数据报表**：活动统计和成员报告
+
+## 🚀 技术栈
+
+- **前端**：Next.js 15 + React 19 + TypeScript + Tailwind CSS
+- **后端**：EdgeOne Pages Functions (Serverless)
+- **存储**：EdgeOne KV Storage
+- **部署**：EdgeOne Pages (一键部署)
+
+## 📦 快速开始
+
+### 1. 安装依赖
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. 开发环境
+```bash
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. 部署
+```bash
+npm run build
+git push origin main  # EdgeOne 自动部署
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 项目结构
 
-## Learn More
+```
+├── app/                 # Next.js 页面
+├── components/          # React 组件
+├── functions/           # EdgeOne Pages Functions
+│   └── api/            # API 路由
+├── config/             # 配置文件
+├── services/           # 数据服务
+└── types/              # TypeScript 类型
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 📖 文档
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [EdgeOne Pages Functions 部署指南](./EDGEONE-PAGES-FUNCTIONS.md)
+- [开发进度](./开发进度.md)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+简单、高效、稳定的游戏管理解决方案 🎯

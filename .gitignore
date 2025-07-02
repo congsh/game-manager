@@ -41,3 +41,10 @@ yarn-error.log*
 next-env.d.ts
 dist/huawei-function.zip
 dist/tencent-scf.zip
+
+# Tencent Cloud EdgeOne
+.env
+.edgeone/*
+!.edgeone/project.json
+.tef_dist/*
+  

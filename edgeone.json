@@ -1,0 +1,16 @@
+{
+  "name": "game-manager",
+  "description": "游戏管理系统",
+  "buildCommand": "npm run build",
+  "outputDirectory": "out",
+  "functions": {
+    "directory": "functions"
+  },
+  "kv": [
+    {
+      "binding": "GAME_MANAGER_KV",
+      "preview_id": "",
+      "id": ""
+    }
+  ]
+} 
