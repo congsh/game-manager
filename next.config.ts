@@ -6,9 +6,7 @@ const nextConfig: NextConfig = {
     unoptimized: true // EdgeOne Pages 优化图片处理
   },
   // 保持 SSR 和 API 路由支持
-  experimental: {
-    serverComponentsExternalPackages: []
-  }
+  serverExternalPackages: []
 };
 
 export default nextConfig;

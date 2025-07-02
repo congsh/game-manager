@@ -31,9 +31,7 @@ const nextConfig = {
   generateBuildId: () => 'edgeone-static-build',
   // 页面扩展名配置，排除 API 路由
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
-  experimental: {
-    outputFileTracingRoot: process.cwd(),
-  }
+  outputFileTracingRoot: process.cwd()
 };
 
 module.exports = nextConfig;
