@@ -1,0 +1,69 @@
+{
+  "users": [
+    {
+      "id": "user-1751426214801-sjgobsgvk",
+      "name": "旧炉",
+      "dailySignups": [],
+      "weekendPlans": [],
+      "ownedGames": [],
+      "gamePreferences": [],
+      "willingToJoinOthers": true
+    }
+  ],
+  "games": [
+    {
+      "id": "game-1",
+      "name": "CS:GO",
+      "category": "FPS",
+      "minPlayers": 1,
+      "maxPlayers": 10,
+      "platform": [
+        "Steam"
+      ],
+      "createdBy": "system",
+      "createdAt": "2025-07-02T03:16:49.626Z"
+    },
+    {
+      "id": "game-2",
+      "name": "王者荣耀",
+      "category": "MOBA",
+      "minPlayers": 1,
+      "maxPlayers": 5,
+      "platform": [
+        "手机"
+      ],
+      "createdBy": "system",
+      "createdAt": "2025-07-02T03:16:49.626Z"
+    },
+    {
+      "id": "game-3",
+      "name": "原神",
+      "category": "RPG",
+      "minPlayers": 1,
+      "maxPlayers": 4,
+      "platform": [
+        "PC",
+        "手机",
+        "PS"
+      ],
+      "createdBy": "system",
+      "createdAt": "2025-07-02T03:16:49.626Z"
+    }
+  ],
+  "dailySignups": [
+    {
+      "id": "1751426223675-j24qd3rwb",
+      "userId": "user-1751426214801-sjgobsgvk",
+      "userName": "旧炉",
+      "gameId": "game-1",
+      "gameName": "CS:GO",
+      "signupDate": "2025-07-02T03:17:03.675Z",
+      "preference": 4,
+      "notes": "",
+      "createdAt": "2025-07-02T03:17:03.675Z"
+    }
+  ],
+  "weekendPlans": [],
+  "gameGroups": [],
+  "lastUpdated": "2025-07-02T03:17:03.675Z"
+}
