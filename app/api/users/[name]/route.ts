@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { AppData } from '@/services/dataService';
+import { corsJsonResponse, handleCorsOptions } from '@/utils/cors';
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'app-data.json');
 
@@ -21,6 +22,11 @@ async function readData(): Promise<AppData> {
   }
 }
 
+// OPTIONS - 处理预检请求
+export async function OPTIONS() {
+  return handleCorsOptions();
+}
+
 // GET - 根据用户名获取用户
 export async function GET(
   request: NextRequest,
@@ -34,16 +40,16 @@ export async function GET(
     const user = data.users.find(u => u.name === userName);
     
     if (!user) {
-      return NextResponse.json(
+      return corsJsonResponse(
         { error: 'User not found' },
         { status: 404 }
       );
     }
     
-    return NextResponse.json(user);
+    return corsJsonResponse(user);
   } catch (error) {
     console.error('Error fetching user:', error);
-    return NextResponse.json(
+    return corsJsonResponse(
       { error: 'Failed to fetch user' },
       { status: 500 }
     );

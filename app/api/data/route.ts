@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { AppData } from '@/services/dataService';
+import { corsJsonResponse, handleCorsOptions } from '@/utils/cors';
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'app-data.json');
 
@@ -75,14 +76,19 @@ async function writeData(data: AppData): Promise<void> {
   await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
 }
 
+// OPTIONS - 处理预检请求
+export async function OPTIONS() {
+  return handleCorsOptions();
+}
+
 // GET - 获取所有数据
 export async function GET() {
   try {
     const data = await readData();
-    return NextResponse.json(data);
+    return corsJsonResponse(data);
   } catch (error) {
     console.error('Error reading data:', error);
-    return NextResponse.json(
+    return corsJsonResponse(
       { error: 'Failed to read data' },
       { status: 500 }
     );
@@ -94,10 +100,10 @@ export async function POST(request: NextRequest) {
   try {
     const data: AppData = await request.json();
     await writeData(data);
-    return NextResponse.json({ success: true });
+    return corsJsonResponse({ success: true });
   } catch (error) {
     console.error('Error writing data:', error);
-    return NextResponse.json(
+    return corsJsonResponse(
       { error: 'Failed to write data' },
       { status: 500 }
     );
