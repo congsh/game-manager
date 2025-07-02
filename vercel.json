@@ -1,17 +1,4 @@
 {
-  "version": 2,
-  "name": "game-manager-api",
-  "functions": {
-    "app/api/data/route.ts": {
-      "maxDuration": 10
-    },
-    "app/api/users/route.ts": {
-      "maxDuration": 10
-    },
-    "app/api/users/[name]/route.ts": {
-      "maxDuration": 10
-    }
-  },
   "headers": [
     {
       "source": "/api/(.*)",
