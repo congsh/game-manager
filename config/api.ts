@@ -5,12 +5,13 @@
 
 // API 基础地址配置
 export const API_CONFIG = {
-  // 主要 API 地址（CloudBase）
-  PRIMARY_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://your-env-id.service.tcloudbase.com',
+  // 主要 API 地址（华为云函数计算）
+  PRIMARY_API_URL: process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_HUAWEI_API_URL || 'https://your-function-url.functiongraph.cn-north-4.huaweicloud.com',
   
-  // 备用 API 地址列表（保留Vercel作为备用）
+  // 备用 API 地址列表
   BACKUP_API_URLS: [
-    'https://game-manager-api.vercel.app',
+    'https://your-env-id.service.tcloudbase.com', // CloudBase 备用
+    'https://game-manager-api.vercel.app',        // Vercel 备用
     'https://game-manager-murex.vercel.app'
   ],
   
