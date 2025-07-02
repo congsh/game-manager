@@ -9,7 +9,9 @@
     "lint": "next lint",
     "edgeone:check": "node scripts/pre-deploy-check.js",
     "edgeone:build": "cross-env EDGEONE_BUILD=true node scripts/build-edgeone.js",
-    "edgeone:deploy": "npm run edgeone:check && echo '✅ 预检查通过，请前往腾讯云控制台完成部署'"
+    "edgeone:deploy": "npm run edgeone:check && echo '✅ 预检查通过，请前往腾讯云控制台完成部署'",
+    "vercel:build": "next build",
+    "vercel:api-test": "echo '🔍 测试API端点...' && node scripts/test-api.js"
   },
   "dependencies": {
     "date-fns": "^4.1.0",
